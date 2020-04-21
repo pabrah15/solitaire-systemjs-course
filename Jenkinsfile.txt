@@ -1,12 +1,15 @@
 stage 'CI'
 node {
-
+    pull scm
     //git branch: 'jenkins2-course', 
         //url: 'https://github.com/pabrah15/solitaire-systemjs-course.git'
 
     // pull dependencies from npm
     // on windows use: bat 'npm install'
-    sh 'npm install'
+    withNPM(npmrcConfig: '80a99cd5-ae8c-4850-9ed6-ea00352c7230') {
+      sh 'npm install'
+    }
+    
 
     // stash code & dependencies to expedite subsequent testing
     // and ensure same code & dependencies are used throughout the pipeline
@@ -62,7 +65,10 @@ def runTests(browser){
     sh 'rm -rf'
     unstash 'everything'
     // on windows use: bat 'npm run test-single-run -- --browsers PhantomJS'
-    sh "npm run test-single-run -- --browsers ${browser}"
+    withNPM(npmrcConfig: '80a99cd5-ae8c-4850-9ed6-ea00352c7230') {
+      sh "npm run test-single-run -- --browsers ${browser}"
+    }
+    
     //sh 'ls'
     // archive karma test results (karma is configured to export junit xml files)
     step([$class: 'JUnitResultArchiver', 
