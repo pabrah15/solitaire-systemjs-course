@@ -41,7 +41,7 @@ node {
 
 input 'Deploy to statging?'
 
-stage name: 'Deploy', concurrency: 1
+stage name: 'Deploy to staging', concurrency: 1
 
 node {
     
